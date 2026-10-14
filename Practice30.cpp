@@ -1,7 +1,7 @@
 
 class Solution {
 public:
-    string largestGoodInteger(int num, int sum) {
+    string maxSumOfSquares(int num, int sum) {
         if (sum > 9 * num) return "";
 
         string ans = "";
