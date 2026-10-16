@@ -5,31 +5,52 @@ public:
         const long long MOD = 1000000007;
         int n = nums.size();
 
-        vector<int> last(100001, -1);
-        long long sum = 0;
-        long long sumSq = 0;
-        long long ans = 0;
+        vector<long long> sum(4 * n, 0);
+        vector<long long> sq(4 * n, 0);
+        vector<long long> lazy(4 * n, 0);
 
-        for (int i = 0; i < n; i++) {
-            long long oldSum = sum;
-            long long oldSumSq = sumSq;
-
-            sum = (2 * oldSum + i + 1) % MOD;
-            sumSq = (2 * oldSumSq + 2 * oldSum + i + 1) % MOD;
-
-            if (last[nums[i]] != -1) {
-                long long d = i - last[nums[i]];
-
-                sum = (sum - d + MOD) % MOD;
-
-                sumSq = (sumSq - 2 * d % MOD * (oldSum % MOD) % MOD
-                         + MOD) % MOD;
-
-                sumSq = (sumSq + d * d) % MOD;
+        auto update = [&](auto&& self, int node, int l, int r,
+                          int ql, int qr, long long val) -> void {
+            if (ql <= l && r <= qr) {
+                sq[node] = (sq[node] + 2 * val * sum[node] % MOD
+                            + (r - l + 1LL) * val % MOD * val) % MOD;
+                sum[node] = (sum[node] + (r - l + 1LL) * val) % MOD;
+                lazy[node] = (lazy[node] + val) % MOD;
+                return;
             }
 
+            int mid = (l + r) / 2;
+
+            if (lazy[node]) {
+                long long v = lazy[node];
+
+                for (int child : {node * 2, node * 2 + 1}) {
+                    int len = child == node * 2 ? mid - l + 1 : r - mid;
+                    sq[child] = (sq[child] + 2 * v * sum[child] % MOD
+                                + len * v % MOD * v) % MOD;
+                    sum[child] = (sum[child] + len * v) % MOD;
+                    lazy[child] = (lazy[child] + v) % MOD;
+                }
+
+                lazy[node] = 0;
+            }
+
+            if (ql <= mid)
+                self(self, node * 2, l, mid, ql, qr, val);
+            if (qr > mid)
+                self(self, node * 2 + 1, mid + 1, r, ql, qr, val);
+
+            sum[node] = (sum[node * 2] + sum[node * 2 + 1]) % MOD;
+            sq[node] = (sq[node * 2] + sq[node * 2 + 1]) % MOD;
+        };
+
+        long long ans = 0;
+        vector<int> last(100001, -1);
+
+        for (int i = 0; i < n; i++) {
+            update(update, 1, 0, n - 1, last[nums[i]] + 1, i, 1);
+            ans = (ans + sq[1]) % MOD;
             last[nums[i]] = i;
-            ans = (ans + sumSq) % MOD;
         }
 
         return ans;
