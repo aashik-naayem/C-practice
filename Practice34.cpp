@@ -5,7 +5,6 @@ public:
         vector<int> pattern(sorted.begin() + start,
                             sorted.begin() + start + k);
 
-        // Build the KMP prefix table.
         vector<int> lps(k, 0);
 
         for (int i = 1, len = 0; i < k;) {
@@ -18,8 +17,6 @@ public:
             }
         }
 
-        // Search for the pattern in the doubled block.
-        // 2*k - 1 elements cover every possible rotation.
         for (int i = 0, j = 0; i < 2 * k - 1; i++) {
             int x = nums[start + (i % k)];
 
@@ -39,7 +36,7 @@ public:
         return false;
     }
 
-    int sumOfSortableIntegers(vector<int>& nums) {
+    int sortableIntegers(vector<int>& nums) {
         int n = nums.size();
         vector<int> sorted = nums;
         sort(sorted.begin(), sorted.end());
@@ -47,9 +44,8 @@ public:
         int ans = 0;
 
         for (int k = 1; k <= n; k++) {
-            if (n % k != 0) {
+            if (n % k != 0)
                 continue;
-            }
 
             bool sortable = true;
 
@@ -60,9 +56,8 @@ public:
                 }
             }
 
-            if (sortable) {
+            if (sortable)
                 ans += k;
-            }
         }
 
         return ans;
