@@ -11,14 +11,15 @@ public:
             return -1;
         }
 
-        if (s[0] == *min_element(s.begin(), s.end()) ||
-            s[n - 1] == *max_element(s.begin(), s.end())) {
+        char mn = *min_element(s.begin(), s.end());
+        char mx = *max_element(s.begin(), s.end());
+
+        if (s[0] == mn || s[n - 1] == mx) {
             return 1;
         }
 
-        if (s[0] == *max_element(s.begin(), s.end()) &&
-            s[n - 1] == *min_element(s.begin(), s.end())) {
-            return 3;
+        if (s[0] == mx && s[n - 1] == mn) {
+            return 2;
         }
 
         return 2;
