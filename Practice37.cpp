@@ -14,4 +14,12 @@ public:
                 total += days[i];
             }
 
-           
+            return total;
+        };
+
+        int start = max(convert(arriveAlice), convert(arriveBob));
+        int end = min(convert(leaveAlice), convert(leaveBob));
+
+        return max(0, end - start + 1);
+    }
+};
