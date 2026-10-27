@@ -5,10 +5,4 @@ public:
 
         grid[0] = string(n, '.');
 
-        for (int i = 0; i < m; i++) {
-            grid[i][n - 1] = '.';
-        }
-
-        return grid;
-    }
-};
+        
