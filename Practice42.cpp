@@ -1,6 +1,6 @@
 class Solution {
 public:
-    int minCost(int n, vector<vector<int>>& edges, string labels, int k) {
+    int shortestPath(int n, vector<vector<int>>& edges, string labels, int k) {
         vector<vector<pair<int, int>>> adj(n);
 
         for (auto& e : edges) {
@@ -27,7 +27,10 @@ public:
             if (u == n - 1)
                 return (int)cost;
 
-            for (auto [v, w] : adj[u]) {
+            for (auto& edge : adj[u]) {
+                int v = edge.first;
+                int w = edge.second;
+
                 int nextCnt;
 
                 if (labels[u] == labels[v])
